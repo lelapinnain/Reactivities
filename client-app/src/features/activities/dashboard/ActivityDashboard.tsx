@@ -15,6 +15,7 @@ interface Props {
   formClose: () => void
   createOrEdit: (activity: Activity) => void
   deleteActivity: (id: string) => void
+  submitting: boolean
 }
 
 export default function ActivityDashboard({
@@ -27,28 +28,21 @@ export default function ActivityDashboard({
   formClose,
   createOrEdit,
   deleteActivity,
+  submitting,
 }: Props) {
   return (
     <>
       <Container>
         <Row>
           <Col sm={5}>
-            <Button
-              variant="primary"
-              onClick={formOpen}
-              style={{ width: '30px', float: 'right' }}
-            >
+            <Button variant="primary" onClick={formOpen} style={{ width: '30px', float: 'right' }}>
               +
             </Button>
           </Col>
         </Row>
         <Row>
           <Col sm={6}>
-            <ActivityList
-              activities={activities}
-              selectActivity={selectActivity}
-              deleteActivity={deleteActivity}
-            />
+            <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} />
           </Col>
           <Col sm={6}>
             {selectedActivety && !editMode && (
@@ -63,7 +57,7 @@ export default function ActivityDashboard({
                 formClose={formClose}
                 activity={selectedActivety}
                 createOrEdit={createOrEdit}
-                
+                submitting={submitting}
               />
             )}
           </Col>

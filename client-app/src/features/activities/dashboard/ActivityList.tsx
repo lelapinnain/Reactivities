@@ -22,7 +22,7 @@ export default function ActivityList({
               <Card.Header>{activity.title}</Card.Header>
               <Card.Body>
                 <Card.Title>{activity.venue}</Card.Title>
-                <Card.Text> {activity.date.substring(0, 10)}</Card.Text>
+                <Card.Text> {activity.date}</Card.Text>
                 <Card.Text>{activity.description}</Card.Text>
                 <Button
                   variant="primary"

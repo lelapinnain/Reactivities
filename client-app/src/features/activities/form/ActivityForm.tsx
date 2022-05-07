@@ -1,20 +1,15 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { Card, Button, Form } from 'react-bootstrap'
+import { Card, Button, Form, Spinner } from 'react-bootstrap'
 import { Activity } from '../../../app/models/activity'
 
 interface Props {
   activity: Activity | undefined
   formClose: () => void
   createOrEdit: (activity: Activity) => void
- 
+  submitting: boolean
 }
 
-export default function ActivityForm({
-  activity: selectedActivity,
-  createOrEdit,
- 
-  formClose,
-}: Props) {
+export default function ActivityForm({ activity: selectedActivity, createOrEdit, submitting, formClose }: Props) {
   const initialState = selectedActivity ?? {
     id: '',
     title: '',
@@ -31,9 +26,7 @@ export default function ActivityForm({
     createOrEdit(activity)
   }
 
-  function handleInputChange(
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = event.target
     setActivity({ ...activity, [name]: value })
   }
@@ -79,7 +72,7 @@ export default function ActivityForm({
             <Form.Group className="mb-3" controlId="date">
               <Form.Label>Date</Form.Label>
               <Form.Control
-                type="text"
+                type="date"
                 placeholder="Enter Date"
                 value={activity.date}
                 name="date"
@@ -109,16 +102,18 @@ export default function ActivityForm({
               />
             </Form.Group>
 
-            <Button
-              variant="secoundary"
-              style={{ float: 'right' }}
-              onClick={() => formClose()}
-            >
+            <Button variant="secoundary" style={{ float: 'right' }} onClick={() => formClose()}>
               Cancel
             </Button>
             <Button variant="primary" type="submit" style={{ float: 'right' }}>
               Submit
             </Button>
+            {submitting && (
+              <Button variant="primary" disabled>
+                <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />
+                Loading...
+              </Button>
+            )}
           </Form>
         </Card.Body>
       </Card>
