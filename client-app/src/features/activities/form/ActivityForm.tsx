@@ -1,15 +1,12 @@
+import { observer } from 'mobx-react-lite'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { Card, Button, Form, Spinner } from 'react-bootstrap'
-import { Activity } from '../../../app/models/activity'
+import { useStore } from '../../../app/stores/store'
 
-interface Props {
-  activity: Activity | undefined
-  formClose: () => void
-  createOrEdit: (activity: Activity) => void
-  submitting: boolean
-}
+export default observer(function ActivityForm() {
+  const { acitivityStore } = useStore()
+  const { selectedActivity, closeForm, createActivity, updateActivity, loading } = acitivityStore
 
-export default function ActivityForm({ activity: selectedActivity, createOrEdit, submitting, formClose }: Props) {
   const initialState = selectedActivity ?? {
     id: '',
     title: '',
@@ -19,17 +16,19 @@ export default function ActivityForm({ activity: selectedActivity, createOrEdit,
     city: '',
     venue: '',
   }
+
   const [activity, setActivity] = useState(initialState)
 
-  const handleSubmit = (e: FormEvent<HTMLElement>) => {
+  function handleSubmit(e: any) {
     e.preventDefault()
-    createOrEdit(activity)
+    activity.id ? updateActivity(activity) : createActivity(activity)
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = event.target
     setActivity({ ...activity, [name]: value })
   }
+
   return (
     <>
       <Card style={{ margin: '20px' }}>
@@ -102,13 +101,13 @@ export default function ActivityForm({ activity: selectedActivity, createOrEdit,
               />
             </Form.Group>
 
-            <Button variant="secoundary" style={{ float: 'right' }} onClick={() => formClose()}>
+            <Button variant="secoundary" style={{ float: 'right' }} onClick={() => closeForm()}>
               Cancel
             </Button>
             <Button variant="primary" type="submit" style={{ float: 'right' }}>
               Submit
             </Button>
-            {submitting && (
+            {loading && (
               <Button variant="primary" disabled>
                 <Spinner as="span" animation="grow" size="sm" role="status" aria-hidden="true" />
                 Loading...
@@ -119,4 +118,4 @@ export default function ActivityForm({ activity: selectedActivity, createOrEdit,
       </Card>
     </>
   )
-}
+})
