@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react-lite'
-import React, { SyntheticEvent, useState } from 'react'
+import React from 'react'
 import { Col, Container, Card, Button } from 'react-bootstrap'
-import { Activity } from '../../../app/models/activity'
+
+import { Link } from 'react-router-dom'
 import { useStore } from '../../../app/stores/store'
 
 export default observer(function ActivityList() {
@@ -22,15 +23,12 @@ export default observer(function ActivityList() {
                 <Card.Title>{activity.venue}</Card.Title>
                 <Card.Text> {activity.date}</Card.Text>
                 <Card.Text>{activity.description}</Card.Text>
-                <Button
-                  variant="primary"
-                  style={{ float: 'right' }}
-                  onClick={() => {
-                    acitivityStore.selectActivity(activity.id)
-                  }}
-                >
+                <Link to={`/activities/${activity.id}`} style={{ float: 'right' }} className="btn btn-primary">
                   View
-                </Button>
+                </Link>
+                {/* <Button variant="primary" style={{ float: 'right' }}  as={Link} to={`/activities/${activity.id}`}>
+                  View
+                </Button> */}
                 <Button variant="danger" style={{ float: 'right' }} onClick={() => handleActivityDelete(activity.id)}>
                   Delete
                 </Button>

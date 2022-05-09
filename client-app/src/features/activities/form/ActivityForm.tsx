@@ -1,13 +1,17 @@
 import { observer } from 'mobx-react-lite'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { Card, Button, Form, Spinner } from 'react-bootstrap'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import LoadingComponent from '../../../app/layout/LoadingComponent'
 import { useStore } from '../../../app/stores/store'
+import { v4 as uuid } from 'uuid'
 
 export default observer(function ActivityForm() {
   const { acitivityStore } = useStore()
-  const { selectedActivity, closeForm, createActivity, updateActivity, loading } = acitivityStore
+  const navigate = useNavigate()
 
-  const initialState = selectedActivity ?? {
+  const { createActivity, updateActivity, loading, loadActivity, loadingInitial } = acitivityStore
+  const [activity, setActivity] = useState({
     id: '',
     title: '',
     category: '',
@@ -15,20 +19,35 @@ export default observer(function ActivityForm() {
     date: '',
     city: '',
     venue: '',
-  }
+  })
+  const { id } = useParams<{ id: string }>()
 
-  const [activity, setActivity] = useState(initialState)
+  useEffect(() => {
+    if (id) loadActivity(id).then((activity) => setActivity(activity!))
+  }, [id, loadActivity])
 
   function handleSubmit(e: any) {
     e.preventDefault()
-    activity.id ? updateActivity(activity) : createActivity(activity)
+    if (activity.id.length === 0) {
+      let newActivity = {
+        ...activity,
+        id: uuid(),
+      }
+      createActivity(newActivity).then(() => {
+        navigate(`/activities`)
+      })
+    } else {
+      updateActivity(activity).then(() => {
+        navigate(`/activities/${id}`)
+      })
+    }
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = event.target
     setActivity({ ...activity, [name]: value })
   }
-
+  if (loadingInitial) return <LoadingComponent />
   return (
     <>
       <Card style={{ margin: '20px' }}>
@@ -100,10 +119,16 @@ export default observer(function ActivityForm() {
                 onChange={handleInputChange}
               />
             </Form.Group>
+            {id ? (
+              <Link to={`/activities/${id}`} style={{ float: 'right' }} className="btn btn-secoundary">
+                Cancel
+              </Link>
+            ) : (
+              <Link to={`/activities`} style={{ float: 'right' }} className="btn btn-secoundary">
+                Cancel
+              </Link>
+            )}
 
-            <Button variant="secoundary" style={{ float: 'right' }} onClick={() => closeForm()}>
-              Cancel
-            </Button>
             <Button variant="primary" type="submit" style={{ float: 'right' }}>
               Submit
             </Button>

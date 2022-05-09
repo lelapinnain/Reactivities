@@ -1,6 +1,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Button, Navbar, Container } from 'react-bootstrap'
+import { Navbar, Container } from 'react-bootstrap'
+import { NavLink } from 'react-router-dom'
 
 export default function NavBar() {
   return (
@@ -18,7 +19,7 @@ export default function NavBar() {
     <>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="#home">
+          <Navbar.Brand as={NavLink} to="/">
             {' '}
             <img
               src="/assets/logo.png"
@@ -27,9 +28,13 @@ export default function NavBar() {
               height="30px"
               style={{ marginRight: '10px', paddingLeft: '0px' }}
             />
-            Activities
           </Navbar.Brand>
           <Navbar.Toggle />
+
+          <Navbar.Text as={NavLink} to="/activities">
+            Activities
+          </Navbar.Text>
+          <Navbar.Collapse />
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
               Signed in as: <a href="#login">Mark Otto</a>
