@@ -1,9 +1,13 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-import { Card, Button } from 'react-bootstrap'
+import { Card, Button, Container, Col, Row } from 'react-bootstrap'
 import { Link, useParams } from 'react-router-dom'
 import LoadingComponent from '../../../app/layout/LoadingComponent'
 import { useStore } from '../../../app/stores/store'
+import ActivityDetailedChat from './ActivityDetailedChat'
+import ActivityDetailedHeader from './ActivityDetailedHeader'
+import ActivityDetailedInfo from './ActivityDetailedInfo'
+import ActivityDetailedSideBar from './ActivityDetailedSideBar'
 
 export default observer(function ActivityDetails() {
   const { acitivityStore } = useStore()
@@ -19,7 +23,19 @@ export default observer(function ActivityDetails() {
   if (loadingInitial || !activity) return <LoadingComponent />
   return (
     <>
-      <Card style={{ width: '35rem' }}>
+      <Container>
+        <Row>
+          <Col style={{ width: '10px' }}>
+            <ActivityDetailedHeader activity={activity} />
+            <ActivityDetailedInfo activity={activity} />
+            <ActivityDetailedChat />
+          </Col>
+          <Col style={{ width: '10px' }}>
+            <ActivityDetailedSideBar />
+          </Col>
+        </Row>
+      </Container>
+      {/* <Card style={{ width: '35rem' }}>
         <Card.Img variant="top" src={`/assets/categoryImages/${activity.category}.jpg`} />
         <Card.Body>
           <Card.Title>{activity.title}</Card.Title>
@@ -30,9 +46,8 @@ export default observer(function ActivityDetails() {
           <Link to={`/activities`} style={{ float: 'right' }} className="btn btn-danger">
             cancel
           </Link>
-          
         </Card.Body>
-      </Card>
+      </Card> */}
     </>
   )
 })

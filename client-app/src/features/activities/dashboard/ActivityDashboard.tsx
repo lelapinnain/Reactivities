@@ -1,11 +1,12 @@
 import { observer } from 'mobx-react-lite'
 import React, { useEffect } from 'react'
-import { Col, Container, Row, Button } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import LoadingComponent from '../../../app/layout/LoadingComponent'
 import { useStore } from '../../../app/stores/store'
 import ActivityDetails from '../details/ActivityDetails'
 import ActivityForm from '../form/ActivityForm'
+import ActivityFilters from './ActivityFilters'
 import ActivityList from './ActivityList'
 
 export default observer(function ActivityDashboard() {
@@ -32,8 +33,7 @@ export default observer(function ActivityDashboard() {
             <ActivityList />
           </Col>
           <Col sm={6}>
-            {selectedActivity && !editMode && <ActivityDetails />}
-            {editMode && <ActivityForm />}
+            <ActivityFilters />
           </Col>
         </Row>
       </Container>

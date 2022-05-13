@@ -34,6 +34,9 @@ export default function NavBar() {
           <Navbar.Text as={NavLink} to="/activities">
             Activities
           </Navbar.Text>
+          <Navbar.Text as={NavLink} to="/errors">
+            Errors
+          </Navbar.Text>
           <Navbar.Collapse />
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>

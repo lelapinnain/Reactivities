@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import { makeAutoObservable, runInAction } from 'mobx'
 import agent from '../API/agent'
 import { Activity } from '../models/activity'
@@ -7,14 +8,23 @@ export default class ActivityStore {
   selectedActivity: Activity | undefined = undefined
   editMode = false
   loading = false
-  loadingInitial = true
+  loadingInitial = false
 
   constructor() {
     makeAutoObservable(this)
   }
 
   get activitiesByDate() {
-    return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
+    return Array.from(this.activityRegistry.values()).sort((a, b) => a.date!.getTime() - b.date!.getTime())
+  }
+  get groupedActivities() {
+    return Object.entries(
+      this.activitiesByDate.reduce((activities, activity) => {
+        const date = format(activity.date!, 'dd MMM yyyy h:mm aa')
+        activities[date] = activities[date] ? [...activities[date], activity] : [activity]
+        return activities
+      }, {} as { [key: string]: Activity[] })
+    )
   }
 
   loadActivities = async () => {
@@ -22,11 +32,7 @@ export default class ActivityStore {
       const activities = await agent.Activities.list()
 
       activities.forEach((activity) => {
-        activity.date = activity.date.split('T')[0]
-        runInAction(() => {
-          this.activityRegistry.set(activity.id, activity)
-        })
-        console.log(this.editMode)
+        this.setActivity(activity)
         // console.log(this.activityRegistry.get('45a9c2fa-0f3a-4c31-9ced-895fbef11b2a'))
       })
       this.setLoadingInitial(false)
@@ -59,7 +65,7 @@ export default class ActivityStore {
   }
 
   private setActivity = (activity: Activity) => {
-    activity.date = activity.date.split('T')[0]
+    activity.date = new Date(activity.date!)
     this.activityRegistry.set(activity.id, activity)
   }
   private getActivity = (id: string) => {

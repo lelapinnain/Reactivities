@@ -1,42 +1,37 @@
 import { observer } from 'mobx-react-lite'
-import React from 'react'
-import { Col, Container, Card, Button } from 'react-bootstrap'
+import React, { Fragment } from 'react'
+import { Col, Container } from 'react-bootstrap'
 
-import { Link } from 'react-router-dom'
 import { useStore } from '../../../app/stores/store'
+import ActivityListItem from './ActivityListItem'
 
 export default observer(function ActivityList() {
   const { acitivityStore } = useStore()
-  const { deleteActivity, activitiesByDate, loading } = acitivityStore
+  const { groupedActivities, activitiesByDate } = acitivityStore
 
-  function handleActivityDelete(id: string) {
-    deleteActivity(id)
-  }
   return (
     <>
-      <Container>
-        <Col>
-          {activitiesByDate.map((activity) => (
-            <Card key={activity.id} style={{ margin: '10px' }}>
-              <Card.Header>{activity.title}</Card.Header>
-              <Card.Body>
-                <Card.Title>{activity.venue}</Card.Title>
-                <Card.Text> {activity.date}</Card.Text>
-                <Card.Text>{activity.description}</Card.Text>
-                <Link to={`/activities/${activity.id}`} style={{ float: 'right' }} className="btn btn-primary">
-                  View
-                </Link>
-                {/* <Button variant="primary" style={{ float: 'right' }}  as={Link} to={`/activities/${activity.id}`}>
-                  View
-                </Button> */}
-                <Button variant="danger" style={{ float: 'right' }} onClick={() => handleActivityDelete(activity.id)}>
-                  Delete
-                </Button>
-              </Card.Body>
-            </Card>
-          ))}
-        </Col>
-      </Container>
+      {groupedActivities.map(([group, activities]) => (
+        <Fragment key={group}>
+          <h4 style={{ color: 'teal' }}>{group}</h4>
+          <Container>
+            <Col>
+              {activities.map((activity) => (
+                <ActivityListItem key={activity.id} activity={activity} />
+              ))}
+            </Col>
+          </Container>
+        </Fragment>
+      ))}
     </>
+    // <>
+    //   <Container>
+    //     <Col>
+    //       {activitiesByDate.map((activity) => (
+    //         <ActivityListItem key={activity.id} activity={activity} />
+    //       ))}
+    //     </Col>
+    //   </Container>
+    // </>
   )
 })
