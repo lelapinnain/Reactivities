@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 using Domain;
 using MediatR;
 using Application.Activities;
+using Microsoft.AspNetCore.Authorization;
+
 namespace API.Controllers
 {
     public class ActivitiesController : BaseApiController
     {
        
         [HttpGet]
+        
         public async Task<IActionResult> getActivities()
         {
             return HandleResult( await Mediator.Send(new List.Query()));

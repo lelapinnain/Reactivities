@@ -19,6 +19,14 @@ using Application.Core;
 using FluentValidation.AspNetCore;
 using Application;
 using API.Middleware;
+using Domain;
+using Microsoft.AspNetCore.Identity;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace API
 {
@@ -37,7 +45,12 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Create>());
+              services.AddControllers(opt => 
+            {
+                //all api will require authentication here
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            }).AddFluentValidation(config => config.RegisterValidatorsFromAssemblyContaining<Create>());
             
             services.AddSwaggerGen(c =>
             {
@@ -54,6 +67,25 @@ namespace API
             });
             services.AddMediatR(typeof(List.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+            services.AddIdentityCore<AppUsers>(opt=>
+            {
+                opt.Password.RequireNonAlphanumeric=false;
+            }).AddEntityFrameworkStores<DataContext>().AddSignInManager<SignInManager<AppUsers>>()
+            ;
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opt=>
+            {
+                opt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters{
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateAudience=false,
+                    ValidateIssuer = false
+                };
+            });
+            services.AddScoped<TokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,7 +102,7 @@ namespace API
 
             app.UseRouting();
             app.UseCors("CorsPolicy");
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
