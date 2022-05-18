@@ -1,6 +1,4 @@
-import React from 'react'
-import { Col, Container, Figure, Form, ListGroup, Toast, ToastContainer, Accordion } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Container, Figure, Toast, ToastContainer, Accordion } from 'react-bootstrap'
 import { observer } from 'mobx-react-lite'
 
 export default observer(function ActivityDetailedSidebar() {

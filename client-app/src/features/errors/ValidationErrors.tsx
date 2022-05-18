@@ -2,7 +2,7 @@ import React from 'react'
 import { Alert } from 'react-bootstrap'
 
 interface Props {
-  errors: string[] | null
+  errors: any
 }
 
 export default function ValidationErrors({ errors }: Props) {
@@ -10,7 +10,7 @@ export default function ValidationErrors({ errors }: Props) {
     <Alert variant="danger">
       {errors && (
         <ul>
-          {errors.map((err: any, i) => (
+          {errors.map((err: any, i: any) => (
             <li key={i}>{err}</li>
           ))}
         </ul>

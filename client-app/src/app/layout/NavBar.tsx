@@ -1,9 +1,15 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Navbar, Container } from 'react-bootstrap'
-import { NavLink } from 'react-router-dom'
+import { Navbar, Container, NavDropdown, Button } from 'react-bootstrap'
+import { Link, NavLink } from 'react-router-dom'
+import { useStore } from '../stores/store'
+import { history } from '../..'
+import { observer } from 'mobx-react-lite'
 
-export default function NavBar() {
+export default observer(function NavBar() {
+  const {
+    userStore: { logout, user },
+  } = useStore()
   return (
     // <>
     //   <Nav >
@@ -38,13 +44,35 @@ export default function NavBar() {
             Errors
           </Navbar.Text>
           <Navbar.Collapse />
-          <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              Signed in as: <a href="#login">Mark Otto</a>
-            </Navbar.Text>
-          </Navbar.Collapse>
+
+          {user && (
+            <>
+              <Navbar.Collapse className="justify-content-end">
+                <Navbar.Text>Signed in as: {user?.username}</Navbar.Text>
+              </Navbar.Collapse>
+              <NavDropdown title={`${user?.username}`} id="navbarScrollingDropdown">
+                <NavDropdown.Item as={Link} to={`/profile/${user.username}`}>
+                  Profile
+                </NavDropdown.Item>
+                {/*<NavDropdown.Item href="#action4">Another action</NavDropdown.Item> */}
+                <NavDropdown.Divider />
+                <NavDropdown.Item>
+                  <Button onClick={logout}>logout</Button>
+                </NavDropdown.Item>
+              </NavDropdown>
+            </>
+          )}
+          {!user && (
+            <Button
+              onClick={() => {
+                history.push('/login')
+              }}
+            >
+              Login
+            </Button>
+          )}
         </Container>
       </Navbar>
     </>
   )
-}
+})

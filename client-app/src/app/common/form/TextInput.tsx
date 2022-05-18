@@ -1,6 +1,5 @@
 import React from 'react'
 import { useField } from 'formik'
-import { Activity } from '../../models/activity'
 import { Alert, Form } from 'react-bootstrap'
 
 interface Props {
@@ -11,7 +10,7 @@ interface Props {
 }
 
 export default function TextInput(props: Props) {
-  const [field, meta, helpers] = useField(props.name)
+  const [field, meta] = useField(props.name)
   return (
     <>
       <Form.Group className="mb-3">

@@ -1,5 +1,4 @@
-import React from 'react'
-import { Badge, Button, Card, Figure, ListGroup } from 'react-bootstrap'
+import { Badge, Figure, ListGroup } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { Activity } from '../../../app/models/activity'
 import { useStore } from '../../../app/stores/store'

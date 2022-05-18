@@ -7,7 +7,7 @@ import ActivityListItem from './ActivityListItem'
 
 export default observer(function ActivityList() {
   const { acitivityStore } = useStore()
-  const { groupedActivities, activitiesByDate } = acitivityStore
+  const { groupedActivities } = acitivityStore
 
   return (
     <>
