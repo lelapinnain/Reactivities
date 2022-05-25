@@ -31,7 +31,7 @@ export default observer(function ActivityDetails() {
             <ActivityDetailedChat />
           </Col>
           <Col style={{ width: '10px' }}>
-            <ActivityDetailedSideBar />
+            <ActivityDetailedSideBar activity={activity} />
           </Col>
         </Row>
       </Container>

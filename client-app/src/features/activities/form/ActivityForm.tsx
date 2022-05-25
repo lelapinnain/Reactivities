@@ -11,7 +11,7 @@ import TextArea from '../../../app/common/form/TextArea'
 import SelectInput from '../../../app/common/form/SelectInput'
 import { catOptions } from '../../../app/common/options/catoptions'
 import DatePickr from '../../../app/common/form/DatePicker'
-import { Activity } from '../../../app/models/activity'
+import { Activity, ActivityFormValues } from '../../../app/models/activity'
 import { v4 as uuid } from 'uuid'
 
 export default observer(function ActivityForm() {
@@ -19,15 +19,7 @@ export default observer(function ActivityForm() {
   const navigate = useNavigate()
 
   const { createActivity, updateActivity, loading, loadActivity, loadingInitial } = acitivityStore
-  const [activity, setActivity] = useState<Activity>({
-    id: '',
-    title: '',
-    category: '',
-    description: '',
-    date: null,
-    city: '',
-    venue: '',
-  })
+  const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues())
   const activitySchema = Yup.object().shape({
     title: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
     category: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
@@ -40,11 +32,12 @@ export default observer(function ActivityForm() {
   const { id } = useParams<{ id: string }>()
 
   useEffect(() => {
-    if (id) loadActivity(id).then((activity) => setActivity(activity!))
+    if (id) loadActivity(id).then((activity) => setActivity(new ActivityFormValues(activity)))
   }, [id, loadActivity])
 
-  function handleFormSubmit(activity: Activity) {
-    if (activity.id.length === 0) {
+  function handleFormSubmit(activity: ActivityFormValues) {
+    // console.log(activity)
+    if (!activity.id) {
       let newActivity = {
         ...activity,
         id: uuid(),
@@ -67,6 +60,7 @@ export default observer(function ActivityForm() {
         initialValues={activity}
         validationSchema={activitySchema}
         onSubmit={(values) => {
+          
           handleFormSubmit(values)
         }}
       >

@@ -9,7 +9,7 @@ import ActivityList from './ActivityList'
 
 export default observer(function ActivityDashboard() {
   const { acitivityStore } = useStore()
-  const { selectedActivity, editMode, activityRegistry, loadActivities, loadingInitial } = acitivityStore
+  const { activityRegistry, loadActivities, loadingInitial } = acitivityStore
 
   useEffect(() => {
     if (activityRegistry.size <= 1) loadActivities()

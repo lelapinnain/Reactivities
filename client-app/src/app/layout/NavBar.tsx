@@ -51,7 +51,7 @@ export default observer(function NavBar() {
                 <Navbar.Text>Signed in as: {user?.username}</Navbar.Text>
               </Navbar.Collapse>
               <NavDropdown title={`${user?.username}`} id="navbarScrollingDropdown">
-                <NavDropdown.Item as={Link} to={`/profile/${user.username}`}>
+                <NavDropdown.Item as={Link} to={`/profiles/${user.username}`}>
                   Profile
                 </NavDropdown.Item>
                 {/*<NavDropdown.Item href="#action4">Another action</NavDropdown.Item> */}

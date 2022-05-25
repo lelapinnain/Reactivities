@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Application.Interfaces;
 using Infrastructure.Security;
+using Infrastructure.Photos;
 
 namespace API
 {
@@ -77,15 +78,24 @@ namespace API
 
 
             //custom policy for checking host
-            services.AddAuthorization(opt => opt.AddPolicy("IsActivityHost" , policy=>{
-                policy.Requirements.Add( new IsHostRequirment());
-            }));
-            
-            services.AddTransient<IAuthorizationHandler , IsHostRequirmentHandler>();
+             services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("IsActivityHost", policy =>
+                {
+                    policy.Requirements.Add(new IsHostRequirement());
+                });
+            });
+            services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
             //
 
             services.AddScoped<TokenService>();
             services.AddScoped<IUserAccessor , UserAccessor>();
+
+
+            //add cloudinary config
+            services.AddScoped<IPhotoAccessor , PhotoAccessor>();
+            services.Configure<CloudinarySettings>(_config.GetSection("Cloudinary"));
+            //
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

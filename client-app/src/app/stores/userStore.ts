@@ -4,6 +4,7 @@ import { User, UserFormValues } from '../models/users'
 import { history } from '../..'
 
 import { store } from './store'
+import { Profile } from '../models/profile'
 
 export default class UserStore {
   user: User | null = null
@@ -51,9 +52,17 @@ export default class UserStore {
       store.commonStore.setToken(user.token)
       runInAction(() => (this.user = user))
       history.push('/activities')
-       store.modalStore.closeModal()
+      store.modalStore.closeModal()
     } catch (error) {
       throw error
     }
+  }
+  setDisplayName = (name: string) => {
+    if (this.user) this.user.displayName = name;
+   }
+
+  
+  setImage = (image: string) => {
+    if (this.user) this.user.image = image
   }
 }
