@@ -77,6 +77,7 @@ export default class ActivityStore {
     activity.date = new Date(activity.date!)
     this.activityRegistry.set(activity.id, activity)
   }
+
   private getActivity = (id: string) => {
     return this.activityRegistry.get(id)
   }
@@ -171,5 +172,8 @@ export default class ActivityStore {
     } finally {
       runInAction(() => (this.loading = false))
     }
+  }
+  clearSelectedActivity = () => {
+    this.selectedActivity = undefined
   }
 }

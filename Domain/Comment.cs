@@ -6,6 +6,6 @@ namespace Domain
         public string Body { get; set; }
         public AppUsers Author { get; set; }
         public Activity Activity { get; set; }
-        public DateTime CrteatedAt { get; set; }
+        public DateTime CreatedAt { get; set; }= DateTime.UtcNow;
     }
 }
